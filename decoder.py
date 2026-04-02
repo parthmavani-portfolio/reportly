@@ -529,8 +529,24 @@ def process_report(pdf_path, output_dir=None, label=None):
     print(f"\n{'='*60}\n  FMCG ANNUAL REPORT DECODER v3.1\n{'='*60}")
     report = analyse_report(label, pdf_path)
     if not report: return {"error":"No sections could be extracted."}
-    logo = extract_logo(pdf_path, output_dir)
-    charts = {"dashboard":generate_dashboard_chart(report,output_dir),"pmi":generate_pmi_chart(report["pmi"],output_dir),"wordclouds":generate_wordclouds(report,output_dir)}
+    logo = None
+    try:
+        logo = extract_logo(pdf_path, output_dir)
+    except Exception as e:
+        print(f"  ⚠ Logo extraction skipped: {e}")
+    charts = {}
+    try:
+        charts["dashboard"] = generate_dashboard_chart(report, output_dir)
+    except Exception as e:
+        print(f"  ⚠ Dashboard chart failed: {e}")
+    try:
+        charts["pmi"] = generate_pmi_chart(report["pmi"], output_dir)
+    except Exception as e:
+        print(f"  ⚠ PMI chart failed: {e}")
+    try:
+        charts["wordclouds"] = generate_wordclouds(report, output_dir)
+    except Exception as e:
+        print(f"  ⚠ Wordcloud chart failed: {e}")
     pdf_out = os.path.join(output_dir, f"FMCG_Dashboard_{label}.pdf")
     build_pdf(report, logo, charts, pdf_out)
     xlsx_out = os.path.join(output_dir, f"FMCG_Analysis_{label}.xlsx")
