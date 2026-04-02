@@ -382,6 +382,12 @@
         submitBtn.addEventListener('click', async () => {
             if (!selectedFile) return;
 
+            // Re-read file from input to avoid stale reference (Safari fix)
+            let fileToUpload = selectedFile;
+            if (fileInput.files && fileInput.files.length > 0) {
+                fileToUpload = fileInput.files[0];
+            }
+
             const label = reportLabel.value.trim() || 'Report';
             showState('processing');
             processingStep.textContent = 'Uploading PDF...';
@@ -390,7 +396,7 @@
             try {
                 // 1. Upload the file
                 const formData = new FormData();
-                formData.append('file', selectedFile);
+                formData.append('file', fileToUpload);
                 formData.append('label', label);
 
                 const uploadRes = await fetch('/api/analyse', {
@@ -398,12 +404,14 @@
                     body: formData,
                 });
 
+                // Read the response body ONCE
+                const uploadData = await uploadRes.json();
+
                 if (!uploadRes.ok) {
-                    const err = await uploadRes.json();
-                    throw new Error(err.error || 'Upload failed');
+                    throw new Error(uploadData.error || 'Upload failed');
                 }
 
-                const { job_id } = await uploadRes.json();
+                const job_id = uploadData.job_id;
 
                 // 2. Poll for status
                 let done = false;
