@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportly — Annual Report Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --green:#1e2e25;--black:#000000;--white:#ffffff;
+            --gray-50:#f8f9fa;--gray-100:#f1f3f2;--gray-200:#e2e5e3;
+            --gray-400:#9ca39e;--gray-600:#5c655f;
+            --green-light:#2a4035;--green-faint:#f3f6f4;
+            --transition:0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--gray-200);transition:box-shadow var(--transition)}
+        nav.scrolled{box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+        .nav-inner{max-width:1120px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .logo{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--green);text-decoration:none;letter-spacing:-0.5px}
+        .logo span{color:var(--gray-400);font-weight:300}
+        .nav-links{display:flex;align-items:center;gap:32px}
+        .nav-links a{font-size:14px;color:var(--gray-600);text-decoration:none;font-weight:400;transition:color var(--transition)}
+        .nav-links a:hover{color:var(--black)}
+        .nav-cta{font-size:13px!important;color:var(--white)!important;background:var(--green);padding:8px 20px;border-radius:6px;transition:background var(--transition)!important}
+        .nav-cta:hover{background:var(--green-light)!important}
+
+        /* HERO */
+        .hero{padding:140px 32px 80px;text-align:center;max-width:800px;margin:0 auto}
+        .hero-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:12px;color:var(--green);background:var(--green-faint);border:1px solid var(--gray-200);padding:4px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:0.5px}
+        .hero h1{font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.1;color:var(--black);letter-spacing:-1.5px;margin-bottom:20px}
+        .hero h1 em{font-style:normal;color:var(--green)}
+        .hero p{font-size:17px;color:var(--gray-600);max-width:540px;margin:0 auto 40px;line-height:1.7}
+        .hero-cta{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--white);background:var(--green);padding:14px 32px;border-radius:8px;text-decoration:none;transition:all var(--transition)}
+        .hero-cta:hover{background:var(--green-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(30,46,37,0.2)}
+        .hero-cta svg{width:16px;height:16px}
+
+        /* SECTIONS */
+        .section{max-width:1120px;margin:0 auto;padding:80px 32px}
+        .section-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+        .section h2{font-size:32px;font-weight:600;color:var(--black);letter-spacing:-0.8px;margin-bottom:48px}
+
+        /* STEPS */
+        .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+        .step{padding:32px;border:1px solid var(--gray-200);border-radius:12px;transition:all var(--transition)}
+        .step:hover{border-color:var(--green);box-shadow:0 2px 12px rgba(30,46,37,0.06)}
+        .step-number{font-family:'DM Mono',monospace;font-size:13px;color:var(--green);margin-bottom:16px;font-weight:500}
+        .step h3{font-size:18px;font-weight:600;color:var(--black);margin-bottom:10px;letter-spacing:-0.3px}
+        .step p{font-size:14px;color:var(--gray-600);line-height:1.65}
+
+        /* FEATURES */
+        .features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+        .feature{display:flex;gap:16px;padding:24px;border-radius:10px;background:var(--gray-50);transition:background var(--transition)}
+        .feature:hover{background:var(--green-faint)}
+        .feature-icon{flex-shrink:0;width:40px;height:40px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center}
+        .feature-icon svg{width:20px;height:20px;color:var(--white)}
+        .feature h4{font-size:15px;font-weight:600;color:var(--black);margin-bottom:4px}
+        .feature p{font-size:13px;color:var(--gray-600);line-height:1.6}
+
+        /* UPLOAD SECTION */
+        .upload-section{background:var(--green);color:var(--white)}
+        .upload-inner{max-width:680px;margin:0 auto;padding:80px 32px}
+        .upload-inner .section-label{color:var(--gray-400)}
+        .upload-inner h2{color:var(--white);margin-bottom:12px}
+        .upload-inner>p{font-size:15px;color:rgba(255,255,255,0.6);margin-bottom:40px}
+        .upload-form{display:flex;flex-direction:column;gap:20px}
+        .form-group{display:flex;flex-direction:column;gap:6px}
+        .form-group label{font-size:13px;font-weight:500;color:rgba(255,255,255,0.7)}
+        .form-group input[type="text"]{font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:var(--white);outline:none;transition:all var(--transition)}
+        .form-group input[type="text"]::placeholder{color:rgba(255,255,255,0.35)}
+        .form-group input[type="text"]:focus{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.12)}
+
+        /* DROPZONE */
+        .dropzone{position:relative;border:2px dashed rgba(255,255,255,0.2);border-radius:12px;padding:48px 32px;text-align:center;cursor:pointer;transition:all var(--transition)}
+        .dropzone:hover,.dropzone.dragover{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05)}
+        .dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+        .dropzone-icon{width:48px;height:48px;margin:0 auto 16px;background:rgba(255,255,255,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center}
+        .dropzone-icon svg{width:24px;height:24px;color:rgba(255,255,255,0.6)}
+        .dropzone h4{font-size:15px;font-weight:500;color:var(--white);margin-bottom:4px}
+        .dropzone p{font-size:13px;color:rgba(255,255,255,0.45)}
+        .dropzone.has-file{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06)}
+        .file-info{display:none;align-items:center;gap:12px;justify-content:center}
+        .file-info.visible{display:flex}
+        .file-info svg{width:20px;height:20px;color:rgba(255,255,255,0.6)}
+        .file-info span{font-size:14px;color:var(--white);font-weight:500}
+        .file-info .file-size{font-weight:300;color:rgba(255,255,255,0.5);margin-left:4px}
+        .file-info button{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:4px;font-size:18px;line-height:1;transition:color var(--transition)}
+        .file-info button:hover{color:var(--white)}
+
+        /* SUBMIT */
+        .submit-btn{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:var(--green);background:var(--white);border:none;padding:14px 32px;border-radius:8px;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+        .submit-btn:hover:not(:disabled){background:var(--gray-100);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+        .submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+        /* PROCESSING */
+        .processing{display:none;text-align:center;padding:48px 32px}
+        .processing.visible{display:block}
+        .spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.15);border-top-color:var(--white);border-radius:50%;margin:0 auto 20px;animation:spin 0.8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .processing h4{font-size:16px;color:var(--white);margin-bottom:6px}
+        .processing p{font-size:13px;color:rgba(255,255,255,0.5)}
+        .progress-bar{width:100%;max-width:320px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin:20px auto 0;overflow:hidden}
+        .progress-fill{height:100%;background:var(--white);border-radius:2px;width:0%;transition:width 0.4s ease}
+
+        /* ERROR */
+        .error-box{display:none;text-align:center;padding:48px 32px}
+        .error-box.visible{display:block}
+        .error-box h4{font-size:16px;color:#ff6b6b;margin-bottom:8px}
+        .error-box p{font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto}
+
+        /* RESULTS */
+        .results{display:none;text-align:center;padding:48px 32px}
+        .results.visible{display:block}
+        .results-icon{width:56px;height:56px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+        .results-icon svg{width:28px;height:28px;color:var(--white)}
+        .results h4{font-size:18px;color:var(--white);margin-bottom:6px}
+        .results>p{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px}
+        .results-metrics{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+        .metric{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 18px;text-align:center}
+        .metric-label{font-size:11px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;font-family:'DM Mono',monospace}
+        .metric-value{font-size:15px;font-weight:600;color:var(--white)}
+        .download-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+        .download-btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:12px 24px;border-radius:8px;text-decoration:none;transition:all var(--transition);cursor:pointer;border:none}
+        .download-btn.primary{background:var(--white);color:var(--green)}
+        .download-btn.primary:hover{background:var(--gray-100);transform:translateY(-1px)}
+        .download-btn.secondary{background:rgba(255,255,255,0.1);color:var(--white);border:1px solid rgba(255,255,255,0.2)}
+        .download-btn.secondary:hover{background:rgba(255,255,255,0.15)}
+        .download-btn svg{width:16px;height:16px}
+        .reset-btn{display:inline-block;margin-top:24px;font-size:13px;color:rgba(255,255,255,0.45);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;transition:color var(--transition)}
+        .reset-btn:hover{color:rgba(255,255,255,0.7)}
+
+        /* FOOTER */
+        footer{max-width:1120px;margin:0 auto;padding:40px 32px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--gray-200)}
+        footer p{font-size:13px;color:var(--gray-400)}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .nav-links a:not(.nav-cta){display:none}
+            .hero{padding:120px 20px 60px}
+            .hero h1{font-size:32px;letter-spacing:-1px}
+            .steps{grid-template-columns:1fr;gap:16px}
+            .features-grid{grid-template-columns:1fr}
+            .section{padding:60px 20px}
+            .upload-inner{padding:60px 20px}
+            .download-links{flex-direction:column}
+            .results-metrics{flex-direction:column;align-items:center}
+            footer{flex-direction:column;gap:12px;text-align:center}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="nav-inner">
+            <a href="#" class="logo">Reportly<span>.</span></a>
+            <div class="nav-links">
+                <a href="#how-it-works">How it works</a>
+                <a href="#features">Features</a>
+                <a href="#upload" class="nav-cta">Analyse Report</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">FMCG &middot; Manufacturing &middot; Consumer Goods</div>
+        <h1>Decode any annual report in <em>seconds</em></h1>
+        <p>Upload a PDF annual report and get a complete NLP-powered dashboard with sentiment analysis, theme extraction, management guidance, and a text-derived PMI score.</p>
+        <a href="#upload" class="hero-cta">
+            Upload Report
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
+        </a>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how-it-works">
+        <div class="section-label">How it works</div>
+        <h2>Three steps. One report.</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">01</div>
+                <h3>Upload the PDF</h3>
+                <p>Drop any FMCG or manufacturing company's annual report. The tool automatically finds the table of contents and extracts key sections.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">02</div>
+                <h3>NLP pipeline runs</h3>
+                <p>VADER sentiment, TF-IDF keyword extraction, theme counting across 6 FMCG dictionaries, guidance extraction, and PMI calculation.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">03</div>
+                <h3>Download your dashboard</h3>
+                <p>Get a multi-page PDF dashboard with embedded charts, management outlook, forward-looking statements, and source references — plus an Excel workbook.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="section-label">What you get</div>
+        <h2>Built for FMCG analysts</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div>
+                <div><h4>6-Theme Analysis</h4><p>Volume &amp; Distribution, Raw Material, Brand &amp; Innovation, Margin, Growth &amp; Strategy, Risk &amp; Headwinds — with sentence-level evidence.</p></div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/></svg></div>
+                <div><h4>Sentiment Scoring</h4><p>VADER compound sentiment per section, chunked for accuracy on long text. Each section classified as Positive, Neutral, or Negative.</p></div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg></div>
+                <div><h4>Management Guidance</h4><p>Automatically extracts forward-looking statements on revenue growth, margin targets, capex plans, and market expansion strategies.</p></div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                <div><h4>Text-Derived PMI</h4><p>A Purchase Manager Index computed from report language — New Orders, Output, Employment, Supplier Deliveries, and Inventories.</p></div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg></div>
+                <div><h4>Narrative Classification</h4><p>Classifies the overall report into one of six archetypes — from Aggressive Growth to Defensive Stress — based on theme ratios and sentiment.</p></div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+                <div><h4>PDF Dashboard + Excel</h4><p>A polished multi-page PDF with embedded charts, company logo, and full source references — plus a detailed Excel workbook with raw data.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload -->
+    <section class="upload-section" id="upload">
+        <div class="upload-inner">
+            <div class="section-label">Analyse</div>
+            <h2>Upload your report</h2>
+            <p>Drop any FMCG or manufacturing annual report PDF. Processing typically takes 30–90 seconds.</p>
+
+            <!-- Form state -->
+            <div class="upload-form" id="uploadForm">
+                <div class="form-group">
+                    <label for="reportLabel">Report label</label>
+                    <input type="text" id="reportLabel" placeholder="e.g. ITC FY25, HUL FY24, Nestle FY25">
+                </div>
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="fileInput" accept=".pdf">
+                    <div id="dropzoneDefault">
+                        <div class="dropzone-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg></div>
+                        <h4>Drop your PDF here</h4>
+                        <p>or click to browse &middot; PDF only &middot; max 50 MB</p>
+                    </div>
+                    <div class="file-info" id="fileInfo">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                        <span id="fileName"></span>
+                        <button id="removeFile" type="button">&times;</button>
+                    </div>
+                </div>
+                <button class="submit-btn" id="submitBtn" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    Analyse Report
+                </button>
+            </div>
+
+            <!-- Processing state -->
+            <div class="processing" id="processing">
+                <div class="spinner"></div>
+                <h4 id="processingTitle">Analysing your report</h4>
+                <p id="processingStep">Uploading PDF...</p>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+
+            <!-- Error state -->
+            <div class="error-box" id="errorBox">
+                <h4>Something went wrong</h4>
+                <p id="errorMessage">An error occurred during analysis.</p>
+                <button class="reset-btn" id="errorResetBtn">Try again</button>
+            </div>
+
+            <!-- Results state -->
+            <div class="results" id="results">
+                <div class="results-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                <h4>Analysis complete</h4>
+                <p id="resultsSummary"></p>
+                <div class="results-metrics" id="resultsMetrics">
+                    <div class="metric"><div class="metric-label">Narrative</div><div class="metric-value" id="metricNarrative">—</div></div>
+                    <div class="metric"><div class="metric-label">PMI</div><div class="metric-value" id="metricPmi">—</div></div>
+                    <div class="metric"><div class="metric-label">Sentiment</div><div class="metric-value" id="metricSentiment">—</div></div>
+                </div>
+                <div class="download-links">
+                    <a class="download-btn primary" id="downloadPdf"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>PDF Dashboard</a>
+                    <a class="download-btn secondary" id="downloadExcel"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>Excel Workbook</a>
+                </div>
+                <button class="reset-btn" id="resetBtn">Analyse another report</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Reportly. Built for FMCG analysts.</p>
+        <p>Powered by VADER &middot; TF-IDF &middot; pdfplumber</p>
+    </footer>
+
+    <script>
+        // ═══ NAV ═══
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10));
+
+        // ═══ FILE UPLOAD ═══
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const dropzoneDefault = document.getElementById('dropzoneDefault');
+        const submitBtn = document.getElementById('submitBtn');
+        const reportLabel = document.getElementById('reportLabel');
+        let selectedFile = null;
+
+        function fmtSize(b) {
+            if (b < 1024) return b + ' B';
+            if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+            return (b / 1048576).toFixed(1) + ' MB';
+        }
+
+        function setFile(f) {
+            if (!f || f.type !== 'application/pdf') { alert('Please select a PDF file.'); return; }
+            if (f.size > 50 * 1024 * 1024) { alert('File too large. Maximum size is 50 MB.'); return; }
+            selectedFile = f;
+            fileName.innerHTML = f.name + '<span class="file-size"> · ' + fmtSize(f.size) + '</span>';
+            dropzoneDefault.style.display = 'none';
+            fileInfo.classList.add('visible');
+            dropzone.classList.add('has-file');
+            submitBtn.disabled = false;
+            if (!reportLabel.value) reportLabel.value = f.name.replace('.pdf', '').replace(/[_-]/g, ' ');
+        }
+
+        function clearFile() {
+            selectedFile = null; fileInput.value = '';
+            dropzoneDefault.style.display = 'block';
+            fileInfo.classList.remove('visible');
+            dropzone.classList.remove('has-file');
+            submitBtn.disabled = true;
+        }
+
+        fileInput.addEventListener('change', e => { if (e.target.files.length) setFile(e.target.files[0]); });
+        document.getElementById('removeFile').addEventListener('click', e => { e.stopPropagation(); clearFile(); });
+        ['dragenter', 'dragover'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.add('dragover'); }));
+        ['dragleave', 'drop'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.remove('dragover'); }));
+        dropzone.addEventListener('drop', e => { if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]); });
+
+        // ═══ STATES ═══
+        const uploadForm = document.getElementById('uploadForm');
+        const processing = document.getElementById('processing');
+        const results = document.getElementById('results');
+        const errorBox = document.getElementById('errorBox');
+        const processingStep = document.getElementById('processingStep');
+        const progressFill = document.getElementById('progressFill');
+
+        function showState(state) {
+            uploadForm.style.display = state === 'form' ? 'flex' : 'none';
+            processing.classList.toggle('visible', state === 'processing');
+            results.classList.toggle('visible', state === 'results');
+            errorBox.classList.toggle('visible', state === 'error');
+        }
+
+        function resetAll() {
+            showState('form');
+            clearFile();
+            reportLabel.value = '';
+            progressFill.style.width = '0%';
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', resetAll);
+        document.getElementById('errorResetBtn').addEventListener('click', resetAll);
+
+        // ═══ SUBMIT + POLL ═══
+        submitBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            const label = reportLabel.value.trim() || 'Report';
+            showState('processing');
+            processingStep.textContent = 'Uploading PDF...';
+            progressFill.style.width = '5%';
+
+            try {
+                // 1. Upload the file
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('label', label);
+
+                const uploadRes = await fetch('/api/analyse', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!uploadRes.ok) {
+                    const err = await uploadRes.json();
+                    throw new Error(err.error || 'Upload failed');
+                }
+
+                const { job_id } = await uploadRes.json();
+
+                // 2. Poll for status
+                let done = false;
+                while (!done) {
+                    await new Promise(r => setTimeout(r, 1500));
+
+                    const statusRes = await fetch(`/api/status/${job_id}`);
+                    const status = await statusRes.json();
+
+                    if (status.error && status.status === 'error') {
+                        throw new Error(status.error);
+                    }
+
+                    processingStep.textContent = status.step || 'Processing...';
+                    progressFill.style.width = (status.progress || 0) + '%';
+
+                    if (status.status === 'complete') {
+                        done = true;
+
+                        // Set download links
+                        document.getElementById('downloadPdf').href = status.pdf_url;
+                        document.getElementById('downloadExcel').href = status.excel_url;
+
+                        // Set metrics
+                        const narr = status.narrative || '';
+                        document.getElementById('metricNarrative').textContent =
+                            narr.replace(' Narrative', '').substring(0, 25);
+                        document.getElementById('metricPmi').textContent =
+                            status.pmi ? parseFloat(status.pmi).toFixed(1) : '—';
+                        document.getElementById('metricSentiment').textContent =
+                            status.sentiment ? (status.sentiment > 0 ? '+' : '') + parseFloat(status.sentiment).toFixed(3) : '—';
+
+                        document.getElementById('resultsSummary').textContent =
+                            `${label} — Dashboard and Excel workbook are ready.`;
+
+                        progressFill.style.width = '100%';
+                        await new Promise(r => setTimeout(r, 400));
+                        showState('results');
+                    }
+                }
+
+            } catch (err) {
+                document.getElementById('errorMessage').textContent = err.message;
+                showState('error');
+            }
+        });
+    </script>
+</body>
+</html>

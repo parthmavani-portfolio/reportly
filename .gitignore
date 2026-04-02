@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+uploads/
+output/
+nltk_data/
+.env
+*.pdf
+*.xlsx
+.DS_Store
+venv/
+.venv/
